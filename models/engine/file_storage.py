@@ -33,6 +33,8 @@ class FileStorage:
     def all(self, cls=None):
         """Return the dictionary __objects."""
         ret = {}
+        if cls is None:
+            return ret
         name = cls.__name__
         for k, v in FileStorage.__objects.items():
             if name == k.split('.')[0]:
