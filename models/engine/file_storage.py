@@ -30,9 +30,14 @@ class FileStorage:
         "Review": Review
     }
 
-    def all(self):
+    def all(self, cls=None):
         """Return the dictionary __objects."""
-        return FileStorage.__objects
+        ret = {}
+        name = cls.__name__
+        for k, v in FileStorage.__objects.items():
+            if name == k.split('.')[0]:
+                ret[k] = v
+        return ret
 
     def new(self, obj):
         """Set in __objects obj with key <obj_class_name>.id"""
@@ -59,3 +64,7 @@ class FileStorage:
     def delete(self, name, id):
         """delete an object from the objects dictionary"""
         del self.__objects["{}.{}".format(name, id)]
+
+    def delete(self, obj=None):
+        if "{}.{}".format(obj.__class__.__name__, obj.id) in FileStorage.__objects.keys():
+            del FileStorage.__objects["{}.{}".format(obj.__class__.__name__, obj.id)]
