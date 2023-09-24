@@ -1,4 +1,4 @@
-te módulo define una clase para administrar el almacenamiento
+"""te módulo define una clase para administrar el almacenamiento
 de la base de datos para el clon de hbnb
 """
 from models.base_model import Base
