@@ -141,7 +141,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
             return
         if args[0] in HBNBCommand.classes:
-            dic = self.dic_creator(args[1:])
+            dic = self.dic_create(args[1:])
             instance = HBNBCommand.classes[args[0]](**dic)
         else:
             print("** class doesn't exist **")
