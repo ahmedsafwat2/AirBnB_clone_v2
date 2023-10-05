@@ -20,8 +20,7 @@ class DBStorage:
 
     def __init__(self):
         """
-        Crea una instancia del almacenamiento de la
-        base de datos para crear el motor
+        initializing the engine
         """
         self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'.
                                       format(getenv("HBNB_MYSQL_USER"),
@@ -35,7 +34,7 @@ class DBStorage:
 
     def all(self, cls=None):
         """
-        consulta sobre la sesión actual de la base de datos
+        quering all data from db
         """
         if not cls:
             data_list = self.__session.query(Amenity)
@@ -51,30 +50,26 @@ class DBStorage:
 
     def new(self, obj):
         """
-        Método para agregar el objeto a la
-        sesión actual de la base de datos
+        add new obj to db
         """
         self.__session.add(obj)
 
     def save(self):
         """
-        Método para confirmar todos los cambios de la
-        sesión actual de la base de datos
+        commit changes
         """
         self.__session.commit()
 
     def delete(self, obj=None):
         """
-        Método eliminar de la
-        sesión de base de datos actual obj si no es None
+        delet obj from session
         """
-        # obj = cls.id, dentro de una clase, sería una fila de esa clase
         if obj:
             self.__session.delete(obj)
 
     def reload(self):
         """
-        crear todas las tablas en la base de datos
+        establish new session thread safe
         """
         Base.metadata.create_all(self.__engine)
         session_factory = sessionmaker(
@@ -84,6 +79,6 @@ class DBStorage:
 
     def close(self):
         """
-        llamar al método remove() en el atributo de sesión privada
+        close a session safely
         """
         self.__session.close()

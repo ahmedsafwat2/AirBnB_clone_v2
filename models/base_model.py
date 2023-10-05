@@ -3,10 +3,22 @@
 import models
 from uuid import uuid4
 from datetime import datetime
+from sqlalchemy import Column, String, DateTime
+from sqlalchemy.ext.declarative import declarative_base
+
+if models.storage_t == "db":
+    Base = declarative_base()
+else:
+    Base = object
 
 
 class BaseModel:
     """Represents the BaseModel of the HBnB project."""
+
+    if models.storage_t == "db":
+        id = Column(String(60), primary_key=True)
+        created_at = Column(DateTime, default=datetime.utcnow)
+        updated_at = Column(DateTime, default=datetime.utcnow)
 
     def __init__(self, **kwargs):
         """Initialize a new BaseModel.
@@ -27,13 +39,17 @@ class BaseModel:
                     pass
                 else:
                     self.__dict__[k] = v
-        models.storage.new(self)
 
     def save(self):
         """Update updated_at with the current datetime and \
         save the instance."""
         self.updated_at = datetime.today()
+        models.storage.new(self)
         models.storage.save()
+
+    def delete(self):
+        """delete the current instance from the storage"""
+        models.storage.delete(self)
 
     def to_dict(self):
         """Return the dictionary of the BaseModel instance.
@@ -45,6 +61,8 @@ class BaseModel:
         rdict["created_at"] = self.created_at.isoformat()
         rdict["updated_at"] = self.updated_at.isoformat()
         rdict["__class__"] = self.__class__.__name__
+        if "_sa_instance_state" in rdict:
+            del rdict["_sa_instance_state"]
         return rdict
 
     def __str__(self):
